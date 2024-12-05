@@ -1,12 +1,12 @@
-import './style.css'
-import typescriptLogo from './typescript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.ts'
-import instance from './axios/index.ts'
-import { get } from './axios/get.ts'
-import { post } from './axios/post.ts'
+import "./style.css";
+import typescriptLogo from "./typescript.svg";
+import viteLogo from "/vite.svg";
+import { setupCounter } from "./counter.ts";
+// import instance from "./axios/index.ts";
+import { get } from "./axios/get.ts";
+import { instance } from "./axios/post.ts";
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
+document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div>
     <a href="https://vite.dev" target="_blank">
       <img src="${viteLogo}" class="logo" alt="Vite logo" />
@@ -22,10 +22,14 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
       Click on the Vite and TypeScript logos to learn more
     </p>
   </div>
-`
+`;
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+setupCounter(document.querySelector<HTMLButtonElement>("#counter")!);
 
-post.then((res) => {
-  console.log('res', res)
-})
+// get.then((res) => {
+//   console.log("res", res);
+// });
+// console.log(instance.post("/"));
+instance.post("/users").then((res) => {
+  console.log(res);
+});
