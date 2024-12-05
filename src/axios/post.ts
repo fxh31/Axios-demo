@@ -152,43 +152,45 @@ export const instance = axios.create({
   url: "/users/1",
   // responseType: 'stream'
   baseURL: "https://jsonplaceholder.typicode.com",
-  // transformRequest: [
-  //   function (data, headers) {
-  //     // source.cancel() // 利用 cancelToken 取消请求，axios 返回 Promise 的 reject
-  //     // controller.abort() // 利用原生的 AbortController 对象取消请求
+  transformRequest: [
+    function (data, headers) {
+      // source.cancel() // 利用 cancelToken 取消请求，axios 返回 Promise 的 reject
+      // controller.abort() // 利用原生的 AbortController 对象取消请求
 
-  //     // Do whatever you want to transform the data
-  //     switch (typeof data) {
-  //       case "string":
-  //         return data;
-  //       case "object":
-  //         if (!Reflect.has(data, "age")) {
-  //           data.age = 18;
-  //           console.log(data, "99");
-  //         }
-  //         break;
-  //       default:
-  //         break;
-  //     }
+      // Do whatever you want to transform the data
+      switch (typeof data) {
+        case "string":
+          return data;
+        case "object":
+          if (!Reflect.has(data, "age")) {
+            data.age = 18;
+            console.log(data, "99");
+          }
+          break;
+        default:
+          break;
+      }
 
-  //     headers["Content-Type"] = "text/css";
-  //     return data;
-  //   },
-  //   function (data, header) {
-  //     if (typeof data === "string") {
-  //       return data;
-  //     }
-  //     data.sex = "woman";
-  //     console.log(header);
-  //     return JSON.stringify(data);
-  //   },
-  // ],
-  transformResponse: [
-    function (data) {
-      debugger;
+      headers["Content-Type"] = "text/css";
       return data;
     },
+    // function (data, header) {
+    //   if (typeof data === "string") {
+    //     return data;
+    //   }
+    //   // throw Error("请求拦截")
+    //   data.sex = "woman";
+    //   console.log(header);
+    //   return JSON.stringify(data);
+    // },
   ],
+  // transformResponse: [
+  //   function (data) {
+  //     // debugger;
+  //     throw Error("请求失败responseTT");
+  //     return data;
+  //   },
+  // ],
 
   params: {
     // in the url
@@ -282,6 +284,8 @@ export const instance = axios.create({
   // 如果返回 false，即使请求成功了 axios 也会返回 promise 的 reject
   // 返回 true 则会返回 promise 的 resolve
   validateStatus: function (status) {
+    console.log(status)
+    // return status === 200;
     return status >= 200 && status < 300; // default
   },
 
@@ -324,10 +328,12 @@ export const instance = axios.create({
 instance.interceptors.request.use(
   function (config) {
     console.log(config);
-    debugger;
+    // throw Error("请求失败req");
+    // return Promise.reject("请求失败reqlll");
     return config;
   },
   function (err) {
+    debugger
     return Promise.reject(err);
   }
 );
@@ -335,10 +341,11 @@ instance.interceptors.request.use(
 export const myInterceptor = instance.interceptors.response.use(
   function (res) {
     console.log(res);
-    debugger;
+    // throw Error("请求失败response");
     return res;
   },
   function (err) {
+    debugger
     return Promise.reject(err);
   }
 );

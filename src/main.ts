@@ -30,6 +30,17 @@ setupCounter(document.querySelector<HTMLButtonElement>("#counter")!);
 //   console.log("res", res);
 // });
 // console.log(instance.post("/"));
-instance.post("/users").then((res) => {
+const params = new URLSearchParams()
+// params.append("address", "zhangsan")
+
+// const form = new FormData();
+// form.append('my_field', 'my value');
+// form.append('my_buffer', new Blob([1, 2, 3]));
+// form.append('my_file', fileInput.files[0]);
+
+instance.post("/users", form).then((res) => {
   console.log(res);
+}).catch((err) => {
+  console.log(err);
+  console.log(err.toJSON());
 });
