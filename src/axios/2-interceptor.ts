@@ -54,7 +54,8 @@ instance.interceptors.response.use(
   }
 );
 
-export const removeInterceptor = (key) => {
+// key：r1
+export const removeInterceptor = (key: typeof r1) => {
   instance.interceptors.request.eject(key);
   instance.interceptors.response.eject(key);
 };
