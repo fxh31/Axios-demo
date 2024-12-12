@@ -113,3 +113,18 @@ source.cancel("Operation canceled by the user.");
 ```
 
 > **注意：可以使用相同的 token/signal 取消多个请求。**
+
+## Axios 和 axios
+
+axios 从语法上来看并不是 Axios 直接创建实例而来的，它是通过 `createInstance()`方法创建而来——在该方法内，先创建了一个 Axios 的实例，再创建了一个函数，把实例原型上的方法挂到这个函数上，再把实例对象上的属性遍历添加到函数上，最后再返回。所以从**功能上**看 axios 是 Axios 的实例。
+
+- 创建的这个函数实际上也是 Axios.prototype.request 函数 bind() 返回的函数。
+- axios 作为对象具有 Axios 原型对象上的所有方法，还具有 Axios 对象上的所有属性。
+
+## axios 和 instance
+
+他们都可以直接使用，调用对应的请求方法。
+
+- instance 是通过 `axios.create()` 创建出来的对象，在 axios 上设置的 defaults 值都会传递到 instance 对象上，instance 对象也可以自己覆盖这些值。
+
+- 也正是因为 axios 本身包含了所有的方法，可能是处于兼容性的考虑，导致其上的一些废弃的方法也不能很好的删除（CancelToken、all），但是在 instance 上就不能访问了。当然 instance 也没有 axios 独有的 `create()`（不然人人都可以创建 instance）。
