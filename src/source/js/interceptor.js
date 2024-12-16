@@ -10,6 +10,7 @@ function Axios(config) {
 Axios.prototype.request = function (config) {
   let promise = Promise.resolve(config);
 
+  // 正式发送请求
   function dispatchRequest(config) {
     return new Promise((resolve, reject) => {
       resolve({
@@ -47,12 +48,13 @@ InterceptorManage.prototype.use = function (fulfilled, rejected) {
 }
 
 // 测试：playgroud
+// 实例化 axios
 let context = new Axios();
 let axios = Axios.prototype.request.bind(context);
 Object.keys(context).forEach((key) => {
   axios[key] = context[key]
 })
-
+// 测试拦截器
 axios.interceptors.request.use(
   function (config) {
     console.log("请求拦截器 成功 1");
