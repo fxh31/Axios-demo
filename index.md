@@ -133,6 +133,6 @@ axios 从语法上来看并不是 Axios 直接创建实例而来的，它是通�
 
 - axios 对象其实是通过一个`createInstance()`函数生成的，在该函数中会生成一个 Axios 的实例，然后将 Axios 原型对象上的 request 方法绑定（bind）在这个实例上，再遍历 Axios 的原型链和这个实例对象上的方法和属性，将其添加。
 - request 方法是我们实际真正发送请求的方法（所有 get、post 等方需要不同请求类型的方法都是通过它发送的）。他返回一个 promise，而这个 promise 中的 fulfilled 和 rejected 函数则来源于内部一个队列（chain）；
-- 这个队列（chain）始终保持两两成对，对应着 fulfilled 和 rejected 函数；fulfilled 函数对应着 `dispatchRequest()` 方法。该方法内部则会调用 xhrAdapter 去真正利用 XMLHttpRequest 发送请求；
-- 而这个队列之所以要保持两两对应是因为要在实际进行请求的前后做拦截器（interceptor），拦截器每次取都会取两个函数来执行。并将其通过 promise 来判断是否执行成功；
-  > 请求拦截器从队列前面插入，响应拦截器从队列尾部插入。
+- 这个队列（chain）始终保持两两成对，对应着 promise 的 fulfilled 和 rejected 函数；fulfilled 函数对应着 `dispatchRequest()` 方法。该方法内部则会调用 xhrAdapter 去真正利用 XMLHttpRequest 发送请求；
+- 拦截器会被加入这个队列中，然后内部会从头遍历这个队列执行返回最终的 promise。
+  > 请求拦截器从队列前面插入，响应拦截器从队列尾部插入。所以对于请求拦截器先设置的会后执行。
