@@ -22,7 +22,7 @@ Axios.prototype.post = function (config) {
 // 为了实现导出的 axios 对象既可以直接作为函数传递配置对象发送请求，又可以使用 get()、post() 等方法发送请求
 function createInstance(config) {
   const context = new Axios(config);
-  const instance = Axios.prototype.request.bind(context);
+  const instance = Axios.prototype.request.bind(context); // 配置作为函数传递配置对象发送请求
   // 移植 Axios 原型链上的属性和方法（get、post等）
   Object.keys(Axios.prototype).forEach((key) => {
     instance[key] = Axios.prototype[key].bind(context);
