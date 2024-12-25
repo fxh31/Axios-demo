@@ -128,3 +128,11 @@ axios 从语法上来看并不是 Axios 直接创建实例而来的，它是通�
 - instance 是通过 `axios.create()` 创建出来的对象，在 axios 上设置的 defaults 值都会传递到 instance 对象上，instance 对象也可以自己覆盖这些值。
 
 - 也正是因为 axios 本身包含了所有的方法，可能是处于兼容性的考虑，导致其上的一些废弃的方法也不能很好的删除（CancelToken、all），但是在 instance 上就不能访问了。当然 instance 也没有 axios 独有的 `create()`（不然人人都可以创建 instance）。
+
+## 原理梳理
+
+- axios 对象其实是通过一个`createInstance()`函数生成的，在该函数中会生成一个 Axios 的实例，然后将 Axios 原型对象上的 request 方法绑定（bind）在这个实例上，再遍历 Axios 的原型链和这个实例对象上的方法和属性，将其添加。
+- request 方法是我们实际真正发送请求的方法（所有 get、post 等方需要不同请求类型的方法都是通过它发送的）。他返回一个 promise，而这个 promise 中的 fulfilled 和 rejected 函数则来源于内部一个队列（chain）；
+- 这个队列（chain）始终保持两两成对，对应着 fulfilled 和 rejected 函数；fulfilled 函数对应着 `dispatchRequest()` 方法。该方法内部则会调用 xhrAdapter 去真正利用 XMLHttpRequest 发送请求；
+- 而这个队列之所以要保持两两对应是因为要在实际进行请求的前后做拦截器（interceptor），拦截器每次取都会取两个函数来执行。并将其通过 promise 来判断是否执行成功；
+  > 请求拦截器从队列前面插入，响应拦截器从队列尾部插入。
